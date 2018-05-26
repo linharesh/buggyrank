@@ -1,14 +1,15 @@
 import git
 from collections import Counter
-#import re
-#pattern = re.compile("^.*([B|b]ug)s?|([f|F]ix(es|ed)?|[c|C]lose(s|d)?).*$")
+import re
 
 def is_bugfix(commit):
-    words = ["FIX", "FIXING", "FIXED", "BUG FIXED"]
-    commit_message = str(commit.message.upper())
-    for w in words:
-        if w in commit_message: return True
-    return False
+    #words = ["FIX", "FIXING", "FIXED", "BUG FIXED"]
+    pattern = re.compile("^.*([B|b]ug)s?|([f|F]ix(es|ed)?|[c|C]lose(s|d)?).*$")
+    commit_message = str(commit.message)
+    if (pattern.match(commit_message)):
+        return True
+    else:
+        return False
 
 def perform_analysis():
     repo = git.Repo("")
@@ -31,4 +32,5 @@ def perform_analysis():
 def main():
     perform_analysis()
 
-main()
+if __name__ == '__main__':
+    main()

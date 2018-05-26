@@ -1,17 +1,18 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="buggyrank",
-    packages=["buggyrank"],
     version="0.0.1",    
-    scripts=['buggyrank/buggyrank.py'],
-    entry_points={
-        "console_scripts": ["buggyrank=buggyrank:main"]
-    },
+    packages=["buggyrank"],
     author=("Henrique Linhares"),
     author_email="hlinhares@id.uff.br",
     description="",
     keywords=[""],
+    entry_points={
+	    'console_scripts' : [
+		    'buggyrank = buggyrank:main'
+	    ]
+    },
     url="https://github.com/",
     python_requires='>=3.5',
     classifiers=[
