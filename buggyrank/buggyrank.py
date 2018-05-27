@@ -2,6 +2,8 @@ import git
 import re
 import math
 import operator
+import sys
+
 from collections import Counter
 
 def is_bugfix(commit):
@@ -19,21 +21,15 @@ def normalize(time, last_commit_time, first_commit_time):
 def score(normalized_time):
     return (1 / (1 + math.exp(-12 * normalized_time + 12)))
 
-def perform_analysis():
+def perform_analysis(branch='master'):
     repo = git.Repo("")
-    all_commits = list(repo.iter_commits('master'))
+    all_commits = list(repo.iter_commits(branch))
     
     last_commit = all_commits[0]
     first_commit = all_commits[-1]
 
     # to access the datetime of commit:
     # commit.committed_datetime
-
-    print("last commit: ")
-    print(last_commit.committed_datetime)
-
-    print("first commit:")
-    print(first_commit.committed_datetime)
 
     bugfixes_commits = []
     for c in all_commits:
@@ -52,21 +48,38 @@ def perform_analysis():
             score_dict[str(f)] = score_dict.get(str(f), 0) + scr
 
     sorted_dict = sorted(score_dict.items(), key=operator.itemgetter(1), reverse=True)
+    print("Bug prone files (in order, to most bug-prone to less bug-prone):")
     for value in sorted_dict:
-        print(str(value))
+        print(str(value[0]))
 
-    # matching developer to file
+
+    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - --")
+    # matching bug-prone files to commits
+    print("Matching bug-prone files to commits ")
     for value in sorted_dict:
         f = value[0]
-        print("Authors of "+str(f))
-        for c in all_commits:
+        print("Commits that changed "+str(f))
+        for c in bugfixes_commits:
             files = c.stats.files
             if (f in files):
-                print(c.author.name)
+                print(c)
+        print()
+
+    # matching developer to file
+    #for value in sorted_dict:
+    #    f = value[0]
+    #    print("Authors of "+str(f))
+    #    for c in all_commits:
+    #        files = c.stats.files
+    #        if (f in files):
+    #            print(c.author.name)
 
 
 def main():
-    perform_analysis()
+    if (len(sys.argv) > 1):
+        perform_analysis(sys.argv[1])
+    else:
+        perform_analysis()
 
 if __name__ == '__main__':
     main()
