@@ -1,6 +1,8 @@
 import git
-from collections import Counter
 import re
+import math
+import operator
+from collections import Counter
 
 def is_bugfix(commit):
     #pattern = re.compile("^.*([B|b]ug)s?|([f|F]ix(es|ed)?|[c|C]lose(s|d)?).*$")
@@ -13,6 +15,9 @@ def is_bugfix(commit):
 
 def normalize(time, last_commit_time, first_commit_time):
     return (time - first_commit_time) / (last_commit_time-first_commit_time)
+
+def score(normalized_time):
+    return (1 / (1 + math.exp(-12 * normalized_time + 12)))
 
 def perform_analysis():
     repo = git.Repo("")
@@ -35,15 +40,31 @@ def perform_analysis():
         if (is_bugfix(c)):
             bugfixes_commits.append(c)
 
-    file_list = []
-    for bugfix in bugfixes_commits:
-        nrmlzd = normalize(bugfix.committed_datetime, last_commit.committed_datetime, first_commit.committed_datetime)
-        print("$- "+str(nrmlzd))
-        #files = bugfix.stats.files
-        #for f in files:
-        #    file_list.append(f)
 
-    
+    print("Number of bugfix commits: "+str(len(bugfixes_commits)))
+    print(" - - - - - - - - - - - - - -")
+    score_dict = dict()
+    for bugfix in bugfixes_commits:
+        normalized_time = normalize(bugfix.committed_datetime, last_commit.committed_datetime, first_commit.committed_datetime)
+        scr = score(normalized_time)
+        files = bugfix.stats.files
+        for f in files:
+            score_dict[str(f)] = score_dict.get(str(f), 0) + scr
+
+    sorted_dict = sorted(score_dict.items(), key=operator.itemgetter(1), reverse=True)
+    for value in sorted_dict:
+        print(str(value))
+
+    # matching developer to file
+    for value in sorted_dict:
+        f = value[0]
+        print("Authors of "+str(f))
+        for c in all_commits:
+            files = c.stats.files
+            if (f in files):
+                print(c.author.name)
+
+
 def main():
     perform_analysis()
 
