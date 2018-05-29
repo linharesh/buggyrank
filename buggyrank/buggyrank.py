@@ -3,6 +3,7 @@ import re
 import math
 import operator
 import sys
+import os
 
 from collections import Counter
 
@@ -70,12 +71,12 @@ def perform_analysis(branch='master'):
     author_counter = dict()
     for value in sorted_dict:
         f = value[0]
-        print("Developer that most changed "+str(f)+" :")
-        for commit,lines in repo.blame('HEAD', f):            
-            author_name = str(commit.author.name)
-            author_counter[author_name] = author_counter.get(author_name, 0) + len(lines) 
-            print(author_name+" => "+str(len(lines)))
-        print(Counter(author_counter).most_common(1)[0][0])
+        if os.path.isfile(f): 
+            print("Developer that most changed "+str(f)+" :")
+            for commit,lines in repo.blame('HEAD', f):   
+                    author_name = str(commit.author.name)
+                    author_counter[author_name] = author_counter.get(author_name, 0) + len(lines) 
+            print(Counter(author_counter).most_common(1)[0][0])
         
 def main():
     if (len(sys.argv) > 1):
