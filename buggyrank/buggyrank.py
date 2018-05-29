@@ -52,29 +52,31 @@ def perform_analysis(branch='master'):
     for value in sorted_dict:
         print(str(value[0]))
 
-
     print(" - - - - - - - - - - - - - - - - - - - - - - - - - - --")
     # matching bug-prone files to commits
     print("Matching bug-prone files to commits ")
     for value in sorted_dict:
         f = value[0]
-        print("Commits that changed "+str(f))
+        print("Commits that changed "+str(f)+ " :")
         for c in bugfixes_commits:
             files = c.stats.files
             if (f in files):
                 print(c)
         print()
 
-    # matching developer to file
-    #for value in sorted_dict:
-    #    f = value[0]
-    #    print("Authors of "+str(f))
-    #    for c in all_commits:
-    #        files = c.stats.files
-    #        if (f in files):
-    #            print(c.author.name)
-
-
+    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - --")
+    # matching bug-prone files to developer
+    print("matching bug-prone files to author")
+    author_counter = dict()
+    for value in sorted_dict:
+        f = value[0]
+        print("Developer that most changed "+str(f)+" :")
+        for commit,lines in repo.blame('HEAD', f):            
+            author_name = str(commit.author.name)
+            author_counter[author_name] = author_counter.get(author_name, 0) + len(lines) 
+            print(author_name+" => "+str(len(lines)))
+        print(Counter(author_counter).most_common(1)[0][0])
+        
 def main():
     if (len(sys.argv) > 1):
         perform_analysis(sys.argv[1])
