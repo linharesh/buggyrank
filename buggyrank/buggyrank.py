@@ -78,9 +78,31 @@ def perform_analysis(branch='master'):
                     author_counter[author_name] = author_counter.get(author_name, 0) + len(lines) 
             print(Counter(author_counter).most_common(1)[0][0])
         
+def display_help():
+    print(" # # # # # # # # # BUGGYRANK # # # # # # # # # ")
+    print(" # A Defect Prediction Technique That Uses   # ")
+    print(" # Information From Version Control Systems  # ")
+    print(" # # # # # # # # # # # # # # # # # # # # # # # ")
+    print()
+    print(" # # # # # #      HOW TO USE ?     # # # # # # ")
+    print(" 1) Get inside the project directory that    # ")
+    print(" contains the '.git' directory   # ")
+    print(" # # # # # # # # # # # # # # # # # # # # # # # ")
+    print(" 2) Type in the console:                     # ")
+    print(" $ buggyrank [BRANCH-NAME]                   # ")
+    print(" # // The default branch is master //        # ")
+    print(" # # # # # # # # # # # # # # # # # # # # # # # ")
+    print(" 3) See the results!                         # ")
+    print(" # # # # # # # # # # # # # # # # # # # # # # # ")
+    print(" More information: https://github.com/linharesh/buggyrank")    
+
 def main():
     if (len(sys.argv) > 1):
-        perform_analysis(sys.argv[1])
+        arg = sys.argv[1]
+        if (arg == '-h' or arg == '--help'):
+            display_help()
+        else:
+            perform_analysis(sys.argv[1])
     else:
         perform_analysis()
 
