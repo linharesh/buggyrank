@@ -97,6 +97,10 @@ def display_help():
     print(" More information: https://github.com/linharesh/buggyrank")    
 
 def main():
+     
+    if not os.path.isdir('.git'):
+        sys.exit("Error: .git directory not found. Make sure that you are in the correct directory.")
+
     if (len(sys.argv) > 1):
         arg = sys.argv[1]
         if (arg == '-h' or arg == '--help'):
