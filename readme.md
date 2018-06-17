@@ -7,7 +7,7 @@ Buggyrank is a tool that perform bug prediction by analyzing git repositories. I
 This heuristic prediction is also in a Google blog post: <a href="http://google-engtools.blogspot.com/2011/12/bug-prediction-at-google.html">Bug Prediction at Google</a>
 <br><br>
 
-This application was developed and testes with Python version 3.6  
+This application was developed and tested with Python version 3.6  
 
 Developers:<br>
 <a href="https://github.com/linharesh">Henrique Linhares</a> (UFF)<br>
