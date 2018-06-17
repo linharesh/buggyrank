@@ -15,6 +15,7 @@ setup(
     },
     url="https://github.com/",
     python_requires='>=3.5',
+    install_requires=['gitpython'],
     classifiers=[
     	'Development Status :: 3 - Alpha',
     	'License :: OSI Approved :: MIT License',
