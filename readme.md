@@ -2,9 +2,12 @@ Buggyrank
 ==========
 Copyright (c) 2018 Universidade Federal Fluminense (UFF). All rights reserved.
 
-Buggyrank is a tool that .
+Buggyrank is a tool that perform bug prediction by analyzing git repositories. It uses a simple heuristic presented by Rahman et al. in the paper <a href="https://scholar.google.com/scholar?q=Bug+Cache+for+inspections%3A+hit+or+miss%3F">BugCache for inspections: hit or miss?</a><br>
 <br><br>
-Always run buggyrank with python 3.5 or 3.6  
+This heuristic prediction is also in a Google blog post: <a href="http://google-engtools.blogspot.com/2011/12/bug-prediction-at-google.html">Bug Prediction at Google</a>
+<br><br>
+
+This application was developed and testes with Python version 3.6  
 
 Developers:<br>
 <a href="https://github.com/linharesh">Henrique Linhares</a> (UFF)<br>
@@ -30,7 +33,19 @@ python setup.py install
 Basic Usage
 ------------------
 
-<TODO>
+1) Open the terminal and get inside the project that you want to analyzed
+The project must be versioned by a git repository
+```
+cd my_projec
+``` 
+
+2) Type 'buggyrank' in the console
+```
+buggyrank
+``` 
+
+3) View the results presented in the console 
+
 
 License Terms
 -------------
