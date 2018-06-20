@@ -7,9 +7,10 @@ import os
 
 from collections import Counter
 
-def is_bugfix(commit):
-    #pattern = re.compile("^.*([B|b]ug)s?|([f|F]ix(es|ed)?|[c|C]lose(s|d)?).*$")
-    pattern = re.compile("(?i)(fix(e[sd])?|close[sd]?) #[1-9][0-9]*")
+DEFAULT_BUGFIX_REGEX = "(?i)(fix(e[sd])?|close[sd]?) #[1-9][0-9]*"
+
+def is_bugfix(commit, regex):
+    pattern = re.compile(regex)
     commit_message = str(commit.message)
     if (pattern.match(commit_message)):
         return True
@@ -22,7 +23,9 @@ def normalize(time, last_commit_time, first_commit_time):
 def score(normalized_time):
     return (1 / (1 + math.exp(-12 * normalized_time + 12)))
 
-def perform_analysis(branch='master'):
+def perform_analysis(branch='master', regex=DEFAULT_BUGFIX_REGEX):
+    print("regex:")
+    print(regex)
     repo = git.Repo("")
     all_commits = list(repo.iter_commits(branch))
     
@@ -34,7 +37,7 @@ def perform_analysis(branch='master'):
 
     bugfixes_commits = []
     for c in all_commits:
-        if (is_bugfix(c)):
+        if (is_bugfix(c, regex)):
             bugfixes_commits.append(c)
 
 
@@ -89,7 +92,7 @@ def display_help():
     print(" contains the '.git' directory   # ")
     print(" # # # # # # # # # # # # # # # # # # # # # # # ")
     print(" 2) Type in the console:                     # ")
-    print(" $ buggyrank [BRANCH-NAME]                   # ")
+    print(" $ buggyrank -b [BRANCH-NAME]                # ")
     print(" # // The default branch is master //        # ")
     print(" # # # # # # # # # # # # # # # # # # # # # # # ")
     print(" 3) See the results!                         # ")
@@ -102,11 +105,20 @@ def main():
         sys.exit("Error: .git directory not found. Make sure that you are in the correct directory.")
 
     if (len(sys.argv) > 1):
+
         arg = sys.argv[1]
         if (arg == '-h' or arg == '--help'):
             display_help()
         else:
-            perform_analysis(sys.argv[1])
+            branch = 'master'
+            regex = DEFAULT_BUGFIX_REGEX
+            for idx, argument in enumerate(sys.argv):
+                if (argument=='-b' or argument=='--branch'):
+                    branch = sys.argv[idx+1]
+                if (argument=='-r' or argument=='--regex'):
+                    print("entrou no if")
+                    regex = sys.argv[idx+1]
+            perform_analysis(branch, regex)             
     else:
         perform_analysis()
 
