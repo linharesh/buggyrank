@@ -41,8 +41,28 @@ cd my_projec
 
 2) Type 'buggyrank' in the console
 ```
-buggyrank
+buggyrank 
 ``` 
+
+Optional parameters:
+--branch -b
+Choose the branch to be evaluated.
+Example:
+```
+buggyrank --branch develop
+```
+Will evaluate the branch named 'develop'
+
+--regex -r
+Choose the regex to be define if a commit is a bugfix or not.
+The application default regex is: (?i)(fix(e[sd])?|close[sd]?) #[1-9][0-9]*
+But you can use your own regex to detect bugfixes.
+Example
+```
+buggyrank --regex (?i)(bugfixes)(bugfix)
+```
+
+
 
 3) View the results presented in the console 
 
